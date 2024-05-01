@@ -1,4 +1,4 @@
-package com.example.khanflix_id
+package com.khairulanwar.khanflix_id
 
 import io.flutter.embedding.android.FlutterActivity
 

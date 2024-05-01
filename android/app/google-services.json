@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "634352438826",
+    "project_id": "khanflix-id",
+    "storage_bucket": "khanflix-id.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634352438826:android:0961759410d591c5783d53",
+        "android_client_info": {
+          "package_name": "com.khairulanwar.khanflix_id"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRKmA92g6mpeBiZl2Vu7qhKA-9GadBjUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
