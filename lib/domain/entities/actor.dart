@@ -4,7 +4,7 @@ part 'actor.freezed.dart';
 
 @freezed
 class Actor with _$Actor {
-  factory Actor({
+  const factory Actor({
     required String name,
     String? profilePath,
   }) = _Actor;

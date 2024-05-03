@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'transaction.freezed.dart';
-part 'transaction.g.dart';
+part 'transaction.g.dart'; // file ini berisi atau terkait dengan toJon dan fromJSON
 
 @freezed
 class Transaction with _$Transaction {
-  factory Transaction({
+  const factory Transaction({
     String? id,
     required String uid,
     int? transactionTime,
