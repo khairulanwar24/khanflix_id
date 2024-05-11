@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:khanflix_id/data/dummies/dummy_authentication.dart';
 import 'package:khanflix_id/data/dummies/dummy_user_repository.dart';
+import 'package:khanflix_id/data/firebase/firebase_authentication.dart';
+import 'package:khanflix_id/data/firebase/firebase_user_repository.dart';
 import 'package:khanflix_id/domain/usecases/login/login.dart';
 import 'package:khanflix_id/presentation/pages/main_page/main_page.dart';
 
@@ -19,11 +21,12 @@ class LoginPage extends StatelessWidget {
             onPressed: () {
               // menjalankan usercase/login
               Login login = Login(
-                authentication: DummyAuthentication(),
-                userRepository: DummyUserRepository(),
+                authentication: FirebaseAuthentication(),
+                userRepository: FirebaseUserRepository(),
               );
 
-              login(LoginParams(email: 'email', password: 'password')).then(
+              login(LoginParams(email: 'anwar@gmail.com', password: '123456'))
+                  .then(
                 (result) {
                   if (result.isSuccess) {
                     Navigator.of(context).push(
