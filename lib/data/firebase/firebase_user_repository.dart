@@ -55,9 +55,18 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<Result<User>> getUserBalance({required String uid}) {
-    // TODO: implement getUserBalance
-    throw UnimplementedError();
+  Future<Result<User>> getUserBalance({required String uid}) async {
+    DocumentReference<Map<String, dynamic>> documentReference =
+        _firebaseFirestore.doc('users/$uid');
+
+    DocumentSnapshot<Map<String, dynamic>> result =
+        await documentReference.get();
+
+    if (result.exists) {
+      return Result.success(result.data()!['balance']);
+    } else {
+      return const Result.failed('User not Found');
+    }
   }
 
   @override
