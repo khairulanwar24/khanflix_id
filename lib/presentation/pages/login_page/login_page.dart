@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:khanflix_id/data/dummies/dummy_authentication.dart';
-import 'package:khanflix_id/data/dummies/dummy_user_repository.dart';
 import 'package:khanflix_id/data/firebase/firebase_authentication.dart';
 import 'package:khanflix_id/data/firebase/firebase_user_repository.dart';
 import 'package:khanflix_id/domain/usecases/login/login.dart';

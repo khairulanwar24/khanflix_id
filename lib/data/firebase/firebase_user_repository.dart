@@ -24,16 +24,14 @@ class FirebaseUserRepository implements UserRepository {
   @override
   Future<Result<User>> getUser({required String uid}) async {
     DocumentReference<Map<String, dynamic>> documentReference =
-        _firebaseFirestore.doc('user/$uid');
+        _firebaseFirestore.doc('users/$uid');
 
     DocumentSnapshot<Map<String, dynamic>> result =
         await documentReference.get();
 
     if (result.exists) {
       return Result.success(
-        User.fromJson(
-          (result.data()!),
-        ),
+        User.fromJson((result.data()!)),
       );
     } else {
       return const Result.failed('User not Found');
