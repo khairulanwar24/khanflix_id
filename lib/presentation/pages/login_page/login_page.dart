@@ -7,6 +7,7 @@ import 'package:khanflix_id/domain/usecases/login/login.dart';
 import 'package:khanflix_id/presentation/pages/main_page/main_page.dart';
 import 'package:khanflix_id/presentation/providers/usecases/login_provider.dart';
 
+// untuk mengakses provider disuatu widget maka state tersebut harus dibungkus dengan consumerwidget
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
