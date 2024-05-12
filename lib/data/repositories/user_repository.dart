@@ -13,7 +13,7 @@ abstract interface class UserRepository {
     int balance = 0,
   });
   Future<Result<User>> getUser({required String uid});
-  Future<Result<User>> updateUser({required String user});
+  Future<Result<User>> updateUser({required User user});
   Future<Result<User>> getUserBalance({required String uid});
   Future<Result<User>> updateUserBalance(
       {required String uid, required int balance});

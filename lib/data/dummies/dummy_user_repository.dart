@@ -31,7 +31,7 @@ class DummyUserRepository implements UserRepository {
   }
 
   @override
-  Future<Result<User>> updateUser({required String user}) {
+  Future<Result<User>> updateUser({required User user}) {
     // TODO: implement updateUser
     throw UnimplementedError();
   }

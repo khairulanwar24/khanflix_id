@@ -16,9 +16,25 @@ class FirebaseUserRepository implements UserRepository {
       required String email,
       required String name,
       String? photoUrl,
-      int balance = 0}) {
-    // TODO: implement createUser
-    throw UnimplementedError();
+      int balance = 0}) async {
+    CollectionReference<Map<String, dynamic>> users =
+        _firebaseFirestore.collection('users');
+
+    await users.doc(uid).set({
+      'uid': uid,
+      'email': email,
+      'name': name,
+      'photoUrl': photoUrl,
+      'balance': balance,
+    });
+
+    DocumentSnapshot<Map<String, dynamic>> result = await users.doc(uid).get();
+
+    if (result.exists) {
+      return Result.success(User.fromJson(result.data()!));
+    } else {
+      return Result.failed('Failed to create user data');
+    }
   }
 
   @override
@@ -45,9 +61,29 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<Result<User>> updateUser({required String user}) {
-    // TODO: implement updateUser
-    throw UnimplementedError();
+  Future<Result<User>> updateUser({required User user}) async {
+    try {
+      DocumentReference<Map<String, dynamic>> documentReference =
+          _firebaseFirestore.doc('users/${user.uid}');
+      await documentReference.update(user.toJson());
+
+      // ambil lagi user dgn uid tsb
+      DocumentSnapshot<Map<String, dynamic>> result =
+          await documentReference.get();
+
+      if (result.exists) {
+        User updatedUser = User.fromJson(result.data()!);
+        if (updatedUser == user) {
+          return Result.success(updatedUser);
+        } else {
+          return Result.failed('Failed to update user data');
+        }
+      } else {
+        return const Result.failed('Failed to update user data');
+      }
+    } on FirebaseException catch (e) {
+      return Result.failed(e.message ?? 'Failed to update user data');
+    }
   }
 
   @override
