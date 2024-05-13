@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:khanflix_id/data/repositories/user_repository.dart';
 import 'package:khanflix_id/domain/entities/result.dart';
 import 'package:khanflix_id/domain/entities/user.dart';
+import 'package:path/path.dart';
 
 class FirebaseUserRepository implements UserRepository {
   final FirebaseFirestore _firebaseFirestore;
@@ -97,15 +99,56 @@ class FirebaseUserRepository implements UserRepository {
 
   @override
   Future<Result<User>> updateUserBalance(
-      {required String uid, required int balance}) {
-    // TODO: implement updateUserBalance
-    throw UnimplementedError();
+      {required String uid, required int balance}) async {
+    // ambil usernya
+    DocumentReference<Map<String, dynamic>> documentReference =
+        _firebaseFirestore.doc('users/${uid}');
+    DocumentSnapshot<Map<String, dynamic>> result =
+        await documentReference.get();
+
+    if (result.exists) {
+      await documentReference.update({'balance': balance!});
+
+      DocumentSnapshot<Map<String, dynamic>> updateResult =
+          await documentReference.get();
+
+      if (updateResult.exists) {
+        User updateUser = User.fromJson(updateResult.data()!);
+        if (updateUser.balance == balance) {
+          return Result.success(updateUser);
+        } else {
+          return const Failed('Failed to update user balance ');
+        }
+      } else {
+        return const Result.failed('Failed to retrieve updated user balance');
+      }
+    } else {
+      return const Result.failed('User not Found');
+    }
   }
 
   @override
   Future<Result<User>> uploadProfilePicture(
-      {required User user, required File imageFile}) {
-    // TODO: implement uploadProfilePicture
-    throw UnimplementedError();
+      {required User user, required File imageFile}) async {
+    String filename = basename(imageFile.path);
+
+    Reference reference = FirebaseStorage.instance.ref().child(filename);
+
+    try {
+      await reference.putFile(imageFile);
+
+      String downloadUrl = await reference.getDownloadURL();
+
+      var updateResult =
+          await updateUser(user: user.copyWith(photoUrl: downloadUrl));
+
+      if (updateResult.isSuccess) {
+        return Result.success(updateResult.resultValue!);
+      } else {
+        return Result.failed(updateResult.errorMessage!);
+      }
+    } catch (e) {
+      return const Result.failed('Failed to upload profile picture');
+    }
   }
 }
