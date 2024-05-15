@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:khanflix_id/data/firebase/firebase_authentication.dart';
-import 'package:khanflix_id/data/firebase/firebase_user_repository.dart';
 import 'package:khanflix_id/domain/usecases/login/login.dart';
 import 'package:khanflix_id/presentation/pages/main_page/main_page.dart';
 import 'package:khanflix_id/presentation/providers/usecases/login_provider.dart';
@@ -15,7 +12,7 @@ class LoginPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('login'),
+        title: const Text('login'),
       ),
       body: Center(
         child: ElevatedButton(
@@ -43,7 +40,7 @@ class LoginPage extends ConsumerWidget {
                 },
               );
             },
-            child: Text('login')),
+            child: const Text('login')),
       ),
     );
   }

@@ -14,13 +14,39 @@ class FirebaseTransactionRepository implements TransactionRepository {
             firebaseFirestore ?? firestore.FirebaseFirestore.instance;
   @override
   Future<Result<Transaction>> createTransaction(
-      {required Transaction transaction}) async{
-    firestore.CollectionReference<Map<String, dynamic>> transaction =
+      {required Transaction transaction}) async {
+    firestore.CollectionReference<Map<String, dynamic>> transactions =
         _firebaseFirestore.collection('transactions');
 
     try {
       var balanceResult =
           await FirebaseUserRepository().getUserBalance(uid: transaction.uid);
+
+      if (balanceResult.isSuccess) {
+        int previousBalance = balanceResult.resultValue!;
+
+        if (previousBalance - transaction.total >= 0) {
+          await transactions.doc(transaction.id).set(transaction.toJson());
+
+          var result = await transactions.doc(transaction.id).get();
+
+          if (result.exists) {
+            await FirebaseUserRepository().updateUserBalance(
+                uid: transaction.uid,
+                balance: previousBalance - transaction.total);
+
+            return Result.success(Transaction.fromJson(result.data()!));
+          } else {
+            return const Result.failed('Failed to create transaction data');
+          }
+        } else {
+          return const Result.failed('Insufficient balance');
+        }
+      } else {
+        return const Result.failed('Failed to create transaction data');
+      }
+    } catch (e) {
+      return const Result.failed('Failed to create transaction data');
     }
   }
 

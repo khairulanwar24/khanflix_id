@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:khanflix_id/domain/entities/user.dart';
 
 class MainPage extends StatelessWidget {

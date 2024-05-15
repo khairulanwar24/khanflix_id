@@ -35,7 +35,7 @@ class FirebaseUserRepository implements UserRepository {
     if (result.exists) {
       return Result.success(User.fromJson(result.data()!));
     } else {
-      return Result.failed('Failed to create user data');
+      return const Result.failed('Failed to create user data');
     }
   }
 
@@ -57,17 +57,16 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<Result<User>> getUserBalance({required String uid}) async {
+  Future<Result<int>> getUserBalance({required String uid}) async {
     DocumentReference<Map<String, dynamic>> documentReference =
         _firebaseFirestore.doc('users/$uid');
-
     DocumentSnapshot<Map<String, dynamic>> result =
         await documentReference.get();
 
     if (result.exists) {
       return Result.success(result.data()!['balance']);
     } else {
-      return const Result.failed('User not Found');
+      return const Result.failed('User not found');
     }
   }
 
@@ -87,7 +86,7 @@ class FirebaseUserRepository implements UserRepository {
         if (updatedUser == user) {
           return Result.success(updatedUser);
         } else {
-          return Result.failed('Failed to update user data');
+          return const Result.failed('Failed to update user data');
         }
       } else {
         return const Result.failed('Failed to update user data');
@@ -102,12 +101,12 @@ class FirebaseUserRepository implements UserRepository {
       {required String uid, required int balance}) async {
     // ambil usernya
     DocumentReference<Map<String, dynamic>> documentReference =
-        _firebaseFirestore.doc('users/${uid}');
+        _firebaseFirestore.doc('users/$uid');
     DocumentSnapshot<Map<String, dynamic>> result =
         await documentReference.get();
 
     if (result.exists) {
-      await documentReference.update({'balance': balance!});
+      await documentReference.update({'balance': balance});
 
       DocumentSnapshot<Map<String, dynamic>> updateResult =
           await documentReference.get();
