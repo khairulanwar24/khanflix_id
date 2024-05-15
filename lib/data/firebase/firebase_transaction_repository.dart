@@ -51,8 +51,22 @@ class FirebaseTransactionRepository implements TransactionRepository {
   }
 
   @override
-  Future<Result<Transaction>> getUserTransaction({required String uid}) {
-    // TODO: implement getUserTransaction
-    throw UnimplementedError();
+  Future<Result<List<Transaction>>> getUserTransactions(
+      {required String uid}) async {
+    firestore.CollectionReference<Map<String, dynamic>> transactions =
+        _firebaseFirestore.collection('transactions');
+
+    try {
+      var result = await transactions.where('uid', isEqualTo: uid).get();
+
+      if (result.docs.isNotEmpty) {
+        return Result.success(
+            result.docs.map((e) => Transaction.fromJson(e.data())).toList());
+      } else {
+        return const Result.success([]);
+      }
+    } catch (e) {
+      return const Result.failed('Failed to get user transactions');
+    }
   }
 }
