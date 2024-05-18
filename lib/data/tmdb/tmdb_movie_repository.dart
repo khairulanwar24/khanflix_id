@@ -29,26 +29,41 @@ class TmdbMovieRepository implements MovieRepository {
   }
 
   @override
-  Future<Result<List<Movie>>> getNowPlaying({int page = 1}) {
-    // TODO: implement getNowPlaying
-    throw UnimplementedError();
-  }
+  Future<Result<List<Movie>>> getNowPlaying({int page = 1}) async =>
+      _getMovies(_MovieCategory.nowPlaying.toString(), page: page);
 
   @override
-  Future<Result<List<Movie>>> getUpcoming({int page = 1}) {
-    // TODO: implement getUpcoming
-    throw UnimplementedError();
+  Future<Result<List<Movie>>> getUpcoming({int page = 1}) async =>
+      _getMovies(_MovieCategory.upcoming.toString(), page: page);
+
+  Future<Result<List<Movie>>> _getMovies(String category,
+      {int page = 1}) async {
+    try {
+      // panggil dioGet
+      final response = await _dio!.get(
+        'https://api.themoviedb.org/3/movie/$category?language=en-US&page=$page',
+        options: _options,
+      );
+
+      final results = List<Map<String, dynamic>>.from(response.data['results']);
+
+      return Result.success(
+        results.map((e) => Movie.fromJSON(e)).toList(),
+      );
+    } on DioException catch (e) {
+      return Result.failed('failed ${e.message}');
+    }
   }
 }
 
 enum _MovieCategory {
-  nowPlaying('now-playing'),
+  nowPlaying('now_playing'),
   upcoming('upcoming');
 
   final String _instring;
 
-  const _MovieCategory(String instring) : _inString = inString;
+  const _MovieCategory(String inString) : _instring = inString;
 
   @override
-  String toString() => _inString;
+  String toString() => _instring;
 }
